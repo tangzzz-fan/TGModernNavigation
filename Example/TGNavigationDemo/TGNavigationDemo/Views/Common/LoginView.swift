@@ -5,7 +5,12 @@ import TGModernNavigation
 
 struct LoginView: View {
     @Environment(Router<AppRoute>.self) private var router
-    var isModal: Bool = false
+    let isModal: Bool
+    
+    init(isModal: Bool = false) {
+        self.isModal = isModal
+    }
+    
     @State private var email = ""
     @State private var password = ""
     @State private var isLoading = false

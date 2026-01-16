@@ -20,50 +20,6 @@ Redux 模式通过以下方式解决这些问题：
 - **纯函数**：`Reducer` 是纯函数，便于测试
 - **可预测**：相同的 `Action` 序列总是产生相同的状态
 
-## 架构设计
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        View Layer                           │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
-│  │   HomeView  │  │  ListView   │  │ DetailView  │         │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘         │
-│         │                │                │                 │
-│         └────────────────┼────────────────┘                 │
-│                          │                                  │
-│                          ▼                                  │
-│  ┌───────────────────────────────────────────────────────┐ │
-│  │                   NavigationRouter                     │ │
-│  │    (ModernNavigationStack ViewModifier)               │ │
-│  └───────────────────────┬───────────────────────────────┘ │
-└──────────────────────────┼──────────────────────────────────┘
-                           │
-                           ▼
-┌──────────────────────────────────────────────────────────────┐
-│                    NavigationStore                           │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │                  NavigationState                        │ │
-│  │  • path: [any Route]                                   │ │
-│  │  • navigationPath: NavigationPath                       │ │
-│  └────────────────────────────────────────────────────────┘ │
-│                           │                                  │
-│                           ▼                                  │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │                 NavigationReducer                       │ │
-│  │  (State, Action) -> State                              │ │
-│  └────────────────────────────────────────────────────────┘ │
-│                           │                                  │
-│                           ▼                                  │
-│  ┌────────────────────────────────────────────────────────┐ │
-│  │                 NavigationAction                        │ │
-│  │  • push(Route)                                         │ │
-│  │  • pop                                                 │ │
-│  │  • popToRoot                                           │ │
-│  │  • replace([Route])                                    │ │
-│  └────────────────────────────────────────────────────────┘ │
-└──────────────────────────────────────────────────────────────┘
-```
-
 ## 核心组件
 
 ### 1. Route 协议
@@ -158,9 +114,15 @@ public struct ModernNavigationStack<R: Route, Root: View>: View {
 ```swift
 enum AppRoute: Route {
     case home
+    // Push 路由 (不包含 NavigationStack)
     case profile(userId: String)
     case settings
     case detail(itemId: Int)
+    
+    // Sheet/Modal 路由 (包含 NavigationStack)
+    case profileSheet(userId: String)
+    case settingsSheet
+    case loginSheet
     
     var id: Self { self }
     
@@ -170,15 +132,85 @@ enum AppRoute: Route {
         case .home:
             HomeView()
         case .profile(let userId):
-            ProfileView(userId: userId)
+            ProfileView(userId: userId, isModal: false)
         case .settings:
-            SettingsView()
+            SettingsView(isModal: false)
         case .detail(let itemId):
             DetailView(itemId: itemId)
+            
+        // Modal 路由需要包裹 NavigationStack
+        case .profileSheet(let userId):
+            NavigationStack {
+                ProfileView(userId: userId, isModal: true)
+            }
+        case .settingsSheet:
+            NavigationStack {
+                SettingsView(isModal: true)
+            }
+        case .loginSheet:
+            NavigationStack {
+                LoginView(isModal: true)
+            }
         }
     }
 }
 ```
+
+### 2. 初始化 Router
+
+```swift
+@main
+struct MyApp: App {
+    var body: some Scene {
+        WindowGroup {
+            HomeView()
+                .environment(Router(root: .home))
+        }
+    }
+}
+```
+
+## 最佳实践：Push vs Sheet 导航
+
+在 SwiftUI 中处理导航时，需要特别注意 `NavigationStack` 的嵌套问题。
+
+### 问题背景
+如果一个视图（如 `SettingsView`）内部包含了 `NavigationStack`，当它被 Push 到现有的导航栈中时，会产生嵌套的 `NavigationStack`。这会导致：
+1. Path 绑定丢失
+2. 应用可能意外重置回根视图 (popToRoot)
+3. 后续导航失效
+
+### 解决方案
+采用 **分离路由** 策略：
+1. **Push 路由**：直接返回视图内容，**不包裹** `NavigationStack`。
+2. **Sheet/Modal 路由**：使用 `NavigationStack` 包裹视图，确保模态视图有自己的导航上下文。
+
+### 代码范式
+
+```swift
+enum AppRoute: Route {
+    // 1. 定义两套路由 case
+    case settings       // 用于 Push
+    case settingsSheet  // 用于 Sheet/Modal
+
+    @ViewBuilder
+    var body: some View {
+        switch self {
+        case .settings:
+            // Push 场景：直接返回视图，复用父级 NavigationStack
+            SettingsView(isModal: false)
+            
+        case .settingsSheet:
+            // Sheet 场景：包裹新的 NavigationStack
+            NavigationStack {
+                SettingsView(isModal: true)
+            }
+        }
+    }
+}
+```
+
+在视图中，可以通过 `isModal` 属性来动态调整 UI（例如显示 "返回" 还是 "关闭" 按钮）。
 
 ### 2. 创建 Store
 
@@ -224,6 +256,10 @@ struct HomeView: View {
             
             Button("Go to Settings") {
                 navigation.push(.settings)
+            }
+            
+            Button("Go to Detail") {
+                navigation.push(.detail(itemId: 1))
             }
         }
     }
@@ -322,7 +358,7 @@ struct HomeView: View {
             
             // 模态展示
             Button("Show Settings Sheet") {
-                router.sheet(.settings)
+                router.sheet(.settingsSheet)
             }
             
             Button("Show Full Screen") {
@@ -362,11 +398,12 @@ struct SettingsView: View {
     @Environment(PresentationStore<AppRoute>.self) var presentation
     // 或者
     @Environment(Router<AppRoute>.self) var router
+    let isModal: Bool
     
     var body: some View {
-        NavigationStack {
-            List { ... }
-                .toolbar {
+        List { ... }
+            .toolbar {
+                if isModal {
                     ToolbarItem(placement: .cancellationAction) {
                         Button("Close") {
                             presentation.dismiss()
@@ -374,7 +411,7 @@ struct SettingsView: View {
                         }
                     }
                 }
-        }
+            }
     }
 }
 ```
@@ -529,34 +566,6 @@ dependencies: [
     .package(url: "https://github.com/tangzzz-fan/TGModernNavigation.git", from: "0.0.1")
 ]
 ```
-
-## 示例项目
-
-在 `Example` 目录下有完整的示例应用，展示了各种导航和模态展示的用法。
-
-### 运行示例
-
-```bash
-# 进入 Example 目录
-cd Example
-
-# 构建（macOS）
-swift build
-
-# 或在 Xcode 中打开
-open Package.swift
-```
-
-### 示例内容
-
-| 示例 | 说明 |
-|------|------|
-| Basic Navigation | 基本的 push、pop、replace 操作 |
-| Deep Navigation | 多层级导航、deep linking |
-| Navigation Guard | 导航拦截和重定向（如登录检查） |
-| Sheet Demo | 各种 Sheet 配置 |
-| Full Screen Cover | 全屏模态展示 |
-| Multi-Layer Modals | 多层模态堆叠 |
 
 ## License
 

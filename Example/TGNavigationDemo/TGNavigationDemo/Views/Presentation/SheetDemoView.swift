@@ -128,11 +128,11 @@ struct SheetDemoView: View {
             
             Text("""
             // Default sheet
-            router.sheet(.settings)
+            router.sheet(.settingsSheet)
             
             // With configuration
             router.presentation.present(
-                .settings,
+                .settingsSheet,
                 style: .sheet,
                 configuration: SheetConfiguration(
                     detents: [.medium, .large],

@@ -6,8 +6,13 @@ import TGModernNavigation
 struct ProfileView: View {
     @Environment(Router<AppRoute>.self) private var router
     let userId: String
-    var isModal: Bool = false
-
+    let isModal: Bool
+    
+    init(userId: String, isModal: Bool = false) {
+        self.userId = userId
+        self.isModal = isModal
+    }
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {

@@ -5,7 +5,12 @@ import TGModernNavigation
 
 struct SettingsView: View {
     @Environment(Router<AppRoute>.self) private var router
-    var isModal: Bool = false
+    let isModal: Bool
+    
+    init(isModal: Bool = false) {
+        self.isModal = isModal
+    }
+    
     @State private var notificationsEnabled = true
     @State private var darkModeEnabled = false
     @State private var selectedLanguage = "English"
