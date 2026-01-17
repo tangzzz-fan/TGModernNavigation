@@ -110,13 +110,13 @@ public struct SheetDemoView: View {
             
             Section("Present Different Routes") {
                 Button {
-                    router.sheet(.profileSheet(userId: "sheet_user"))
+                    router.sheet(.profileSheet(userId: "sheet_user"), embedInNavigationStack: true)
                 } label: {
                     Label("Profile Sheet", systemImage: "person.circle")
                 }
                 
                 Button {
-                    router.sheet(.detailSheet(id: 42))
+                    router.sheet(.detailSheet(id: 42), embedInNavigationStack: true)
                 } label: {
                     Label("Detail Sheet", systemImage: "doc.text")
                 }

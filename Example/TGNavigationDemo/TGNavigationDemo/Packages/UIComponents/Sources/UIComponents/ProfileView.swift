@@ -98,7 +98,7 @@ public struct ProfileView: View {
             ToolbarItem(placement: .primaryAction) {
                     Menu {
                         Button {
-                            router.sheet(.settingsSheet)
+                            router.sheet(.settingsSheet, embedInNavigationStack: true)
                         } label: {
                             Label("Settings", systemImage: "gearshape")
                         }
