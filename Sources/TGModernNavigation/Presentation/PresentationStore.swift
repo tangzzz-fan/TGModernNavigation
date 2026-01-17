@@ -36,19 +36,20 @@ public final class PresentationStore<R: Route> {
     public func present(
         _ route: R,
         style: PresentationStyle = .sheet,
-        configuration: SheetConfiguration = .default
+        configuration: SheetConfiguration = .default,
+        embedInNavigationStack: Bool = false
     ) {
-        dispatch(.present(route, style: style, configuration: configuration))
+        dispatch(.present(route, style: style, configuration: configuration, embedInNavigationStack: embedInNavigationStack))
     }
     
     /// Present as Sheet
-    public func sheet(_ route: R, configuration: SheetConfiguration = .default) {
-        present(route, style: .sheet, configuration: configuration)
+    public func sheet(_ route: R, configuration: SheetConfiguration = .default, embedInNavigationStack: Bool = false) {
+        present(route, style: .sheet, configuration: configuration, embedInNavigationStack: embedInNavigationStack)
     }
     
     /// Present as Full Screen Cover
-    public func fullScreenCover(_ route: R) {
-        present(route, style: .fullScreenCover, configuration: .default)
+    public func fullScreenCover(_ route: R, embedInNavigationStack: Bool = false) {
+        present(route, style: .fullScreenCover, configuration: .default, embedInNavigationStack: embedInNavigationStack)
     }
     
     /// Dismiss the current modal
@@ -70,9 +71,10 @@ public final class PresentationStore<R: Route> {
     public func replace(
         _ route: R,
         style: PresentationStyle = .sheet,
-        configuration: SheetConfiguration = .default
+        configuration: SheetConfiguration = .default,
+        embedInNavigationStack: Bool = false
     ) {
-        dispatch(.replace(route, style: style, configuration: configuration))
+        dispatch(.replace(route, style: style, configuration: configuration, embedInNavigationStack: embedInNavigationStack))
     }
     
     // MARK: - Computed Properties

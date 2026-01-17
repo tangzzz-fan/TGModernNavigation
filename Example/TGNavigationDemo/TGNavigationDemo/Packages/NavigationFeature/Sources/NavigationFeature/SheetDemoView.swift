@@ -28,7 +28,8 @@ public struct SheetDemoView: View {
                     router.presentation.present(
                         .settingsSheet,
                         style: .sheet,
-                        configuration: .large
+                        configuration: .large,
+                        embedInNavigationStack: true
                     )
                 } label: {
                     HStack {
@@ -44,7 +45,8 @@ public struct SheetDemoView: View {
                     router.presentation.present(
                         .settingsSheet,
                         style: .sheet,
-                        configuration: .medium
+                        configuration: .medium,
+                        embedInNavigationStack: true
                     )
                 } label: {
                     Label("Medium Sheet", systemImage: "rectangle.bottomhalf.inset.filled")
@@ -54,7 +56,8 @@ public struct SheetDemoView: View {
                     router.presentation.present(
                         .settingsSheet,
                         style: .sheet,
-                        configuration: .flexible
+                        configuration: .flexible,
+                        embedInNavigationStack: true
                     )
                 } label: {
                     HStack {
@@ -76,7 +79,8 @@ public struct SheetDemoView: View {
                             detents: [.medium, .large],
                             dragIndicatorVisibility: .visible,
                             interactiveDismissDisabled: false
-                        )
+                        ),
+                        embedInNavigationStack: true
                     )
                 } label: {
                     Label("With Drag Indicator", systemImage: "minus")
@@ -90,7 +94,8 @@ public struct SheetDemoView: View {
                             detents: [.large],
                             dragIndicatorVisibility: .hidden,
                             interactiveDismissDisabled: true
-                        )
+                        ),
+                        embedInNavigationStack: true
                     )
                 } label: {
                     HStack {

@@ -14,16 +14,32 @@ public struct PresentationModifier<R: Route>: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .sheet(item: store.sheetBinding) { presented in
-                presented.route.body
-                    .presentationDetents(presented.configuration.detents)
-                    .presentationDragIndicator(presented.configuration.dragIndicatorVisibility)
-                    .interactiveDismissDisabled(presented.configuration.interactiveDismissDisabled)
-                    .environment(store)
+                Group {
+                    if presented.embedInNavigationStack {
+                        ScopedRouter(R.self) {
+                            presented.route.body
+                        }
+                    } else {
+                        presented.route.body
+                    }
+                }
+                .presentationDetents(presented.configuration.detents)
+                .presentationDragIndicator(presented.configuration.dragIndicatorVisibility)
+                .interactiveDismissDisabled(presented.configuration.interactiveDismissDisabled)
+                .environment(store)
             }
             #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
             .fullScreenCover(item: store.fullScreenCoverBinding) { presented in
-                presented.route.body
-                    .environment(store)
+                Group {
+                    if presented.embedInNavigationStack {
+                        ScopedRouter(R.self) {
+                            presented.route.body
+                        }
+                    } else {
+                        presented.route.body
+                    }
+                }
+                .environment(store)
             }
             #endif
     }

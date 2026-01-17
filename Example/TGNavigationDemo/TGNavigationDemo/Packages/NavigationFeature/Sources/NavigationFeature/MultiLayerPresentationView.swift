@@ -22,7 +22,7 @@ struct MultiLayerPresentationView: View {
             
             Section("Stacked Modals") {
                 Button {
-                    router.sheet(.settingsSheet)
+                    router.sheet(.settingsSheet, embedInNavigationStack: true)
                 } label: {
                     VStack(alignment: .leading, spacing: 4) {
                         Label("Start Modal Stack", systemImage: "square.stack.3d.up.fill")

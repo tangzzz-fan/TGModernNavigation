@@ -34,13 +34,13 @@ public struct SettingsView: View {
             
             Section("Account") {
                 Button {
-                    router.sheet(.profileSheet(userId: "current_user"))
+                    router.sheet(.profileSheet(userId: "current_user"), embedInNavigationStack: true)
                 } label: {
                     Label("View Profile", systemImage: "person.circle")
                 }
                 
                 Button {
-                    router.sheet(.loginSheet)
+                    router.sheet(.loginSheet, embedInNavigationStack: true)
                 } label: {
                     Label("Switch Account", systemImage: "person.2")
                 }
@@ -55,7 +55,7 @@ public struct SettingsView: View {
                 
                 Button {
                     // Present another sheet on top
-                    router.sheet(.profileSheet(userId: "stacked"))
+                    router.sheet(.profileSheet(userId: "stacked"), embedInNavigationStack: true)
                 } label: {
                     Label("Stack Another Sheet", systemImage: "square.stack.3d.up")
                 }

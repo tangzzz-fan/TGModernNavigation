@@ -12,8 +12,8 @@ public enum PresentationReducer<R: Route> {
         var newState = state
         
         switch action {
-        case .present(let route, let style, let configuration):
-            let presented = PresentedRoute(route: route, style: style, configuration: configuration)
+        case .present(let route, let style, let configuration, let embedInNavigationStack):
+            let presented = PresentedRoute(route: route, style: style, configuration: configuration, embedInNavigationStack: embedInNavigationStack)
             newState.present(presented)
             
         case .dismiss:
@@ -25,8 +25,8 @@ public enum PresentationReducer<R: Route> {
         case .dismissTo(let route):
             newState.dismissTo(route)
             
-        case .replace(let route, let style, let configuration):
-            let presented = PresentedRoute(route: route, style: style, configuration: configuration)
+        case .replace(let route, let style, let configuration, let embedInNavigationStack):
+            let presented = PresentedRoute(route: route, style: style, configuration: configuration, embedInNavigationStack: embedInNavigationStack)
             newState.replace(with: presented)
         }
         

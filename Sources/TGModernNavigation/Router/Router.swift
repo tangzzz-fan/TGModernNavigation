@@ -59,16 +59,16 @@ public final class Router<R: Route> {
     // MARK: - Presentation Shortcuts
     
     /// Present as Sheet
-    public func sheet(_ route: R, configuration: SheetConfiguration = .default) {
-        presentation.sheet(route, configuration: configuration)
+    public func sheet(_ route: R, configuration: SheetConfiguration = .default, embedInNavigationStack: Bool = false) {
+        presentation.sheet(route, configuration: configuration, embedInNavigationStack: embedInNavigationStack)
     }
     
     /// Present as Full Screen Cover
-    public func fullScreenCover(_ route: R) {
-        presentation.fullScreenCover(route)
+    public func fullScreenCover(_ route: R, embedInNavigationStack: Bool = false) {
+        presentation.fullScreenCover(route, embedInNavigationStack: embedInNavigationStack)
     }
     
-    /// Dismiss modal
+    /// Dismiss the current modal
     public func dismiss() {
         presentation.dismiss()
     }
@@ -108,7 +108,5 @@ public struct RouterNavigationStack<R: Route, Root: View>: View {
         }
         .presentation(store: router.presentation)
         .environment(router)
-        .environment(router.navigation)
-        .environment(router.presentation)
     }
 }

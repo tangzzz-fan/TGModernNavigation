@@ -59,7 +59,7 @@ public struct DetailView: View {
             
             Section("Presentation Actions") {
                 Button {
-                    router.sheet(.settingsSheet)
+                    router.sheet(.settingsSheet, embedInNavigationStack: true)
                 } label: {
                     Label("Show Settings Sheet", systemImage: "gearshape")
                 }

@@ -12,7 +12,7 @@ import SwiftUI
 /// ```swift
 /// // In your RouteHandler or View
 /// .sheet(item: $activeSheet) { route in
-///     ScopedRouter<AppRoute> {
+///     ScopedRouter(AppRoute.self) {
 ///         DetailView()
 ///     }
 /// }
@@ -28,6 +28,14 @@ public struct ScopedRouter<R: Route, Content: View>: View {
     /// Creates a scoped router
     /// - Parameter content: The root view of the new navigation stack
     public init(@ViewBuilder content: @escaping () -> Content) {
+        self.content = content
+    }
+    
+    /// Creates a scoped router with explicit route type
+    /// - Parameters:
+    ///   - routeType: The type of the route (for inference)
+    ///   - content: The root view
+    public init(_ routeType: R.Type, @ViewBuilder content: @escaping () -> Content) {
         self.content = content
     }
     

@@ -38,25 +38,24 @@
 /// }
 /// ```
 ///
-/// 2. Create Navigation Store:
+/// 2. Create Router:
 /// ```swift
-/// @State private var navigation = NavigationStore<AppRoute>()
+/// @State private var router = Router<AppRoute>()
 /// ```
 ///
-/// 3. Use ModernNavigationStack:
+/// 3. Use RouterNavigationStack:
 /// ```swift
-/// ModernNavigationStack(store: navigation) {
+/// RouterNavigationStack(router: router) {
 ///     HomeView()
 /// }
-/// .environment(navigation)
 /// ```
 ///
 /// 4. Navigate in Views:
 /// ```swift
-/// @Environment(NavigationStore<AppRoute>.self) var navigation
+/// @Environment(Router<AppRoute>.self) var router
 ///
 /// Button("Go to Profile") {
-///     navigation.push(.profile(userId: "123"))
+///     router.push(.profile(userId: "123"))
 /// }
 /// ```
 

@@ -10,10 +10,10 @@ import Observation
 ///
 /// ## Example
 /// ```swift
-/// @State private var navigation = NavigationStore<AppRoute>()
+/// @State private var router = Router<AppRoute>()
 ///
 /// var body: some View {
-///     ModernNavigationStack(store: navigation) {
+///     RouterNavigationStack(router: router) {
 ///         HomeView()
 ///     }
 /// }

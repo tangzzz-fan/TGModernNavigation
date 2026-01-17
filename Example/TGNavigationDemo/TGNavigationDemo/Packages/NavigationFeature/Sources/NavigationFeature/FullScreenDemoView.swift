@@ -26,7 +26,7 @@ public struct FullScreenDemoView: View {
             #if os(iOS) || os(tvOS) || os(watchOS) || os(visionOS)
             Section("Full Screen Presentations") {
                 Button {
-                    router.fullScreenCover(.profileSheet(userId: "fullscreen_user"))
+                    router.fullScreenCover(.profileSheet(userId: "fullscreen_user"), embedInNavigationStack: true)
                 } label: {
                     HStack {
                         Label("Profile Full Screen", systemImage: "person.circle.fill")
@@ -37,7 +37,7 @@ public struct FullScreenDemoView: View {
                 }
                 
                 Button {
-                    router.fullScreenCover(.settingsSheet)
+                    router.fullScreenCover(.settingsSheet, embedInNavigationStack: true)
                 } label: {
                     HStack {
                         Label("Settings Full Screen", systemImage: "gearshape.fill")
@@ -48,7 +48,7 @@ public struct FullScreenDemoView: View {
                 }
                 
                 Button {
-                    router.fullScreenCover(.loginSheet)
+                    router.fullScreenCover(.loginSheet, embedInNavigationStack: true)
                 } label: {
                     HStack {
                         Label("Login Full Screen", systemImage: "person.badge.key.fill")
@@ -96,7 +96,7 @@ public struct FullScreenDemoView: View {
             
             Section("Alternative on macOS") {
                 Button {
-                    router.sheet(.profileSheet(userId: "mac_user"))
+                    router.sheet(.profileSheet(userId: "mac_user"), embedInNavigationStack: true)
                 } label: {
                     Label("Use Sheet Instead", systemImage: "rectangle.bottomhalf.inset.filled")
                 }

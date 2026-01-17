@@ -96,13 +96,13 @@ public final class NavigationStore<R: Route> {
 }
 ```
 
-### 6. ModernNavigationStack
+### 6. RouterNavigationStack
 
-包装 NavigationStack 的视图：
+包装 NavigationStack 的视图，自动集成了 Router 环境：
 
 ```swift
-public struct ModernNavigationStack<R: Route, Root: View>: View {
-    @Bindable var store: NavigationStore<R>
+public struct RouterNavigationStack<R: Route, Root: View>: View {
+    @Bindable var router: Router<R>
     let root: () -> Root
 }
 ```
@@ -119,7 +119,7 @@ enum AppRoute: Route {
     case settings
     case detail(itemId: Int)
     
-    // Sheet/Modal 路由 (包含 NavigationStack)
+    // Sheet/Modal 路由 (自动包裹 ScopedRouter)
     case profileSheet(userId: String)
     case settingsSheet
     case loginSheet
@@ -138,19 +138,12 @@ enum AppRoute: Route {
         case .detail(let itemId):
             DetailView(itemId: itemId)
             
-        // Modal 路由需要包裹 NavigationStack
         case .profileSheet(let userId):
-            NavigationStack {
-                ProfileView(userId: userId, isModal: true)
-            }
+            ProfileView(userId: userId, isModal: true)
         case .settingsSheet:
-            NavigationStack {
-                SettingsView(isModal: true)
-            }
+            SettingsView(isModal: true)
         case .loginSheet:
-            NavigationStack {
-                LoginView(isModal: true)
-            }
+            LoginView(isModal: true)
         }
     }
 }
@@ -161,169 +154,47 @@ enum AppRoute: Route {
 ```swift
 @main
 struct MyApp: App {
+    @State private var router = Router<AppRoute>()
+
     var body: some Scene {
         WindowGroup {
-            HomeView()
-                .environment(Router(root: .home))
-        }
-    }
-}
-```
-
-
-### 最佳实践：Push vs Sheet 导航
-
-在 SwiftUI 中处理导航时，需要特别注意 `NavigationStack` 的嵌套问题。
-
-#### 1. 问题背景
-如果一个视图（如 `SettingsView`）内部包含了 `NavigationStack`，当它被 Push 到现有的导航栈中时，会产生嵌套的 `NavigationStack`。这会导致：
-1. Path 绑定丢失
-2. 应用可能意外重置回根视图 (popToRoot)
-3. 后续导航失效
-
-#### 2. 解决方案：ScopedRouter
-
-TGModernNavigation 提供了 `ScopedRouter` 组件，用于在模态视图（Sheet/FullScreenCover）中创建独立的导航环境。
-
-**核心原则**：
-1. **Push 路由**：直接返回视图内容，**不包裹** `NavigationStack`。
-2. **Sheet/Modal 路由**：使用 `ScopedRouter` 包裹视图。
-
-#### 3. 代码范式
-
-```swift
-enum AppRoute: Route {
-    // 1. 定义两套路由 case
-    case settings       // 用于 Push
-    case settingsSheet  // 用于 Sheet/Modal
-
-    @ViewBuilder
-    var body: some View {
-        switch self {
-        case .settings:
-            // Push 场景：直接返回视图，复用父级 NavigationStack
-            SettingsView(isModal: false)
-            
-        case .settingsSheet:
-            // Sheet 场景：使用 ScopedRouter 创建独立路由环境
-            ScopedRouter<AppRoute> {
-                SettingsView(isModal: true)
+            RouterNavigationStack(router: router) {
+                HomeView()
             }
         }
     }
 }
 ```
 
-在视图中，可以通过 `isModal` 属性来动态调整 UI（例如显示 "返回" 还是 "关闭" 按钮）。
-
-#### 4. 关于 Dismiss 的重要说明
-
-在 `ScopedRouter` 内部（即模态窗口的根视图），你拥有一个新的独立 Router 实例。
-
-- **`router.dismiss()`**: 只能关闭由**当前** Router 弹出的子模态窗口。
-- **`@Environment(\.dismiss)`**: 用于关闭**当前**模态窗口（即关闭自己）。
-
-```swift
-struct SettingsView: View {
-    @Environment(\.dismiss) private var dismiss
-    @Environment(Router<AppRoute>.self) private var router
-    var isModal: Bool
-    
-    var body: some View {
-        List { ... }
-        .toolbar {
-            if isModal {
-                ToolbarItem(placement: .cancellationAction) {
-                    // 正确：关闭当前 Sheet
-                    Button("Close") {
-                        dismiss()
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
-### 2. 创建 Store
-
-```swift
-@main
-struct MyApp: App {
-    @State private var navigationStore = NavigationStore<AppRoute>()
-    
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .environment(navigationStore)
-        }
-    }
-}
-```
-
-### 3. 使用 ModernNavigationStack
-
-```swift
-struct ContentView: View {
-    @Environment(NavigationStore<AppRoute>.self) var navigation
-    
-    var body: some View {
-        ModernNavigationStack(store: navigation) {
-            HomeView()
-        }
-    }
-}
-```
-
-### 4. 在视图中导航
+### 3. 在视图中导航
 
 ```swift
 struct HomeView: View {
-    @Environment(NavigationStore<AppRoute>.self) var navigation
+    @Environment(Router<AppRoute>.self) var router
     
     var body: some View {
         List {
             Button("Go to Profile") {
-                navigation.push(.profile(userId: "123"))
+                router.push(.profile(userId: "123"))
             }
             
             Button("Go to Settings") {
-                navigation.push(.settings)
+                router.push(.settings)
             }
             
-            Button("Go to Detail") {
-                navigation.push(.detail(itemId: 1))
+            Button("Show Settings Sheet") {
+                router.sheet(.settingsSheet)
             }
         }
     }
 }
 ```
 
-### 5. 简易用法分析：@Environment 注入
-
-在视图中通过 `@Environment` 获取 Store 是最常用的模式。
-
-```swift
-@Environment(NavigationStore<AppRoute>.self) private var store
-```
-
-**✅ 优势 (Pros):**
-- **解耦视图层级**: 无需从父视图通过构造函数层层传递 `store` 或 `binding`。
-- **声明式**: 任意深度的子视图都可以直接获取导航能力。
-- **响应式**: 当 Store 状态变化时，依赖它的视图会自动更新（得益于 `@Observable`）。
-
-**⚠️ 注意 (Cons):**
-- **隐式依赖**: 这是一个隐式依赖。如果忘记在根视图调用 `.environment(store)`，应用会在运行时 Crash。
-- **泛型耦合**: 视图与具体的 `AppRoute` 类型绑定。如果需要编写通用的 UI 组件，建议传入闭包 `() -> Void` 而不是直接依赖 Store。
-
-### 6. Deep Linking
+### 4. Deep Linking
 
 ```swift
 // 设置完整的导航路径
-navigation.replace([.home, .profile(userId: "123"), .settings])
-
-// 或者使用 Action
-navigation.dispatch(.replace([.home, .profile(userId: "123")]))
+router.navigation.replace([.home, .profile(userId: "123"), .settings])
 ```
 
 ## 模态展示 (Present)
@@ -417,7 +288,50 @@ struct HomeView: View {
         }
     }
 }
+
+### 模态窗口与导航栈 (ScopedRouter)
+
+默认情况下，`sheet` 和 `fullScreenCover` 展示的视图**不包含**导航栈（NavigationStack）。如果你的模态窗口需要进行内部导航（例如 `push` 到子页面），你需要手动开启 `embedInNavigationStack`：
+
+```swift
+// 开启独立导航栈 (会自动包裹 ScopedRouter)
+router.sheet(.settingsSheet, embedInNavigationStack: true)
 ```
+
+对于不需要导航的简单页面（如详情页、提示框），直接调用即可：
+
+```swift
+// 默认不包含导航栈
+router.sheet(.simpleDetail)
+```
+
+### 关于 Dismiss 的重要说明
+
+在 `ScopedRouter` 内部（即模态窗口的根视图），你拥有一个新的独立 Router 实例。
+
+- **`router.dismiss()`**: 只能关闭由**当前** Router 弹出的子模态窗口。
+- **`@Environment(\.dismiss)`**: 用于关闭**当前**模态窗口（即关闭自己）。
+
+```swift
+struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(Router<AppRoute>.self) private var router
+    var isModal: Bool
+    
+    var body: some View {
+        List { ... }
+        .toolbar {
+            if isModal {
+                ToolbarItem(placement: .cancellationAction) {
+                    // 正确：关闭当前 Sheet
+                    Button("Close") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
 
 ### Sheet 配置
 

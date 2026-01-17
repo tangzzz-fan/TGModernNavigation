@@ -49,19 +49,25 @@ public struct PresentedRoute<R: Route>: Identifiable, Equatable, Sendable {
     public let route: R
     public let style: PresentationStyle
     public let configuration: SheetConfiguration
+    public let embedInNavigationStack: Bool
     
     public init(
         route: R,
         style: PresentationStyle = .sheet,
-        configuration: SheetConfiguration = .default
+        configuration: SheetConfiguration = .default,
+        embedInNavigationStack: Bool = true
     ) {
         self.id = UUID()
         self.route = route
         self.style = style
         self.configuration = configuration
+        self.embedInNavigationStack = embedInNavigationStack
     }
     
     public static func == (lhs: PresentedRoute<R>, rhs: PresentedRoute<R>) -> Bool {
-        lhs.id == rhs.id && lhs.route == rhs.route && lhs.style == rhs.style
+        lhs.id == rhs.id && 
+        lhs.route == rhs.route && 
+        lhs.style == rhs.style &&
+        lhs.embedInNavigationStack == rhs.embedInNavigationStack
     }
 }

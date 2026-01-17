@@ -87,7 +87,7 @@ public struct HomeView: View {
                     icon: "gearshape.fill",
                     color: .gray
                 ) {
-                    router.sheet(.settingsSheet)
+                    router.sheet(.settingsSheet, embedInNavigationStack: true)
                 }
                 
                 DemoRow(
@@ -96,7 +96,7 @@ public struct HomeView: View {
                     icon: "person.circle.fill",
                     color: .teal
                 ) {
-                    router.fullScreenCover(.profileSheet(userId: "demo_user"))
+                    router.fullScreenCover(.profileSheet(userId: "demo_user"), embedInNavigationStack: true)
                 }
             }
         }

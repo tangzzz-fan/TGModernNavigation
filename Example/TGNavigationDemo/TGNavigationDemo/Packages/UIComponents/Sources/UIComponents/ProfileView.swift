@@ -63,7 +63,7 @@ public struct ProfileView: View {
                     .buttonStyle(.borderedProminent)
                     
                     Button {
-                        router.sheet(.detailSheet(id: Int.random(in: 1...100)))
+                        router.sheet(.detailSheet(id: Int.random(in: 1...100)), embedInNavigationStack: true)
                     } label: {
                         Label("View Recent Activity", systemImage: "clock")
                             .frame(maxWidth: .infinity)

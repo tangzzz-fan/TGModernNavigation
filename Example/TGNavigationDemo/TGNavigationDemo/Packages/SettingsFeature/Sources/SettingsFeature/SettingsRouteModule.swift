@@ -9,9 +9,7 @@ public struct SettingsRouteModule: RouteHandler {
         case .settings:
             return AnyView(SettingsView(isModal: false))
         case .settingsSheet:
-            return AnyView(ScopedRouter<AppRoute> {
-                SettingsView(isModal: true)
-            })
+            return AnyView(SettingsView(isModal: true))
         default:
             return nil
         }

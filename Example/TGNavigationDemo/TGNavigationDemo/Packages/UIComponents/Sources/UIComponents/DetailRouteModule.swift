@@ -9,9 +9,7 @@ public struct DetailRouteModule: RouteHandler {
         case .detail(let id):
             return AnyView(DetailView(id: id, isModal: false))
         case .detailSheet(let id):
-            return AnyView(ScopedRouter<AppRoute> {
-                DetailView(id: id, isModal: true)
-            })
+            return AnyView(DetailView(id: id, isModal: true))
         default:
             return nil
         }

@@ -10,15 +10,11 @@ public struct UserRouteModule: RouteHandler {
         case .profile(let userId):
             return AnyView(ProfileView(userId: userId, isModal: false))
         case .profileSheet(let userId):
-            return AnyView(ScopedRouter<AppRoute> {
-                ProfileView(userId: userId, isModal: true)
-            })
+            return AnyView(ProfileView(userId: userId, isModal: true))
         case .login:
             return AnyView(LoginView(isModal: false))
         case .loginSheet:
-            return AnyView(ScopedRouter<AppRoute> {
-                LoginView(isModal: true)
-            })
+            return AnyView(LoginView(isModal: true))
         default:
             return nil
         }

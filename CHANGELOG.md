@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.4] - 2026-01-17
+
+### Changed
+- **BREAKING**: Changed default value of `embedInNavigationStack` to `false` in `router.sheet()`, `router.fullScreenCover()`, and `presentation.present()`. You must now explicitly set `embedInNavigationStack: true` if you need a NavigationStack inside a modal.
+- **API**: Simplified `ScopedRouter` usage with new initializer `ScopedRouter(Route.self) { ... }` to improve type inference.
+- **Refactor**: Removed deprecated `ModernNavigationStack` (use `RouterNavigationStack` instead).
+- **Refactor**: Removed unused `DeepLink` module and `NavigationPath` extensions to simplify the library core.
+
+### Documentation
+- Updated `README.md` and `SwiftUI_Nested_NavigationStack_Issue.md` to reflect the new default behavior and API changes.
+
 ## [0.0.3] - 2026-01-17
 
 ### Added

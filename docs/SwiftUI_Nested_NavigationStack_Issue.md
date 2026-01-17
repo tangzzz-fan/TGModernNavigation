@@ -78,7 +78,7 @@ struct SettingsView: View {
 我们在 `AppRoute` 中明确区分 **Push 路由** 和 **Sheet 路由**。
 
 -   **Push 路由**：直接返回视图，**不**包裹 `NavigationStack`。
--   **Sheet 路由**：包裹 `NavigationStack`，并设置 `isModal: true`。
+-   **Sheet 路由**：设置 `isModal: true`。**注意：库支持自动为 Sheet 包裹 `ScopedRouter`。如果需要导航能力，请在调用时指定 `embedInNavigationStack: true`（默认为 false）。**
 
 ```swift
 enum AppRoute: Route {
@@ -99,26 +99,22 @@ enum AppRoute: Route {
             SettingsView(isModal: false)
             
         case .settingsSheet:
-            // Sheet 模式：包裹 NavigationStack，isModal = true
-            NavigationStack {
-                SettingsView(isModal: true)
-            }
+            // Sheet 模式：自动包裹 ScopedRouter，无需手动添加
+            SettingsView(isModal: true)
             
         case .profile(let userId):
             ProfileView(userId: userId, isModal: false)
             
         case .profileSheet(let userId):
-            NavigationStack {
-                ProfileView(userId: userId, isModal: true)
-            }
+            // 自动包裹
+            ProfileView(userId: userId, isModal: true)
             
         case .login:
             LoginView(isModal: false)
             
         case .loginSheet:
-            NavigationStack {
-                LoginView(isModal: true)
-            }
+            // 自动包裹
+            LoginView(isModal: true)
         }
     }
 }
