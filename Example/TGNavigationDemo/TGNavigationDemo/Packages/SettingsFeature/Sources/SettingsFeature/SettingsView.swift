@@ -6,6 +6,7 @@ import AppCore
 
 public struct SettingsView: View {
     @Environment(Router<AppRoute>.self) private var router
+    @Environment(\.dismiss) private var dismiss
     let isModal: Bool
     
     public init(isModal: Bool = false) {
@@ -91,7 +92,7 @@ public struct SettingsView: View {
             if isModal {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
-                        router.dismiss()
+                        dismiss()
                     }
                 }
             }

@@ -6,6 +6,7 @@ import AppCore
 
 public struct DetailView: View {
     @Environment(Router<AppRoute>.self) private var router
+    @Environment(\.dismiss) private var dismiss
     var id: Int
     var isModal: Bool
     
@@ -64,7 +65,7 @@ public struct DetailView: View {
                 }
                 
                 Button {
-                    router.dismiss()
+                    dismiss()
                 } label: {
                     Label("Dismiss (if presented)", systemImage: "xmark.circle")
                 }
@@ -83,7 +84,7 @@ public struct DetailView: View {
             if isModal {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") {
-                        router.dismiss()
+                        dismiss()
                     }
                 }
             }

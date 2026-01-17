@@ -9,6 +9,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../AppCore"),
+        .package(path: "../AuthFeature"),
         .package(path: "../../../../../")
     ],
     targets: [
@@ -16,6 +17,7 @@ let package = Package(
             name: "UIComponents",
             dependencies: [
                 "AppCore",
+                "AuthFeature",
                 .product(name: "TGModernNavigation", package: "TGModernNavigation")
             ]
         ),

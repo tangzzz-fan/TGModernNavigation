@@ -6,6 +6,7 @@ import AppCore
 
 public struct ProfileView: View {
     @Environment(Router<AppRoute>.self) private var router
+    @Environment(\.dismiss) private var dismiss
     let userId: String
     let isModal: Bool
     
@@ -62,7 +63,7 @@ public struct ProfileView: View {
                     .buttonStyle(.borderedProminent)
                     
                     Button {
-                        router.sheet(.detail(id: Int.random(in: 1...100)))
+                        router.sheet(.detailSheet(id: Int.random(in: 1...100)))
                     } label: {
                         Label("View Recent Activity", systemImage: "clock")
                             .frame(maxWidth: .infinity)
@@ -89,7 +90,7 @@ public struct ProfileView: View {
             if isModal {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Close") {
-                        router.dismiss()
+                        dismiss()
                     }
                 }
             }
