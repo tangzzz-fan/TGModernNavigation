@@ -9,22 +9,11 @@ public struct DetailRouteModule: RouteHandler {
         case .detail(let id):
             return AnyView(DetailView(id: id, isModal: false))
         case .detailSheet(let id):
-            return AnyView(ScopedRouterView {
+            return AnyView(ScopedRouter<AppRoute> {
                 DetailView(id: id, isModal: true)
             })
         default:
             return nil
-        }
-    }
-}
-
-private struct ScopedRouterView<Content: View>: View {
-    @State private var router = Router<AppRoute>()
-    @ViewBuilder let content: Content
-    
-    var body: some View {
-        RouterNavigationStack(router: router) {
-            content
         }
     }
 }

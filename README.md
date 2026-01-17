@@ -170,22 +170,26 @@ struct MyApp: App {
 }
 ```
 
-## 最佳实践：Push vs Sheet 导航
+
+### 最佳实践：Push vs Sheet 导航
 
 在 SwiftUI 中处理导航时，需要特别注意 `NavigationStack` 的嵌套问题。
 
-### 问题背景
+#### 1. 问题背景
 如果一个视图（如 `SettingsView`）内部包含了 `NavigationStack`，当它被 Push 到现有的导航栈中时，会产生嵌套的 `NavigationStack`。这会导致：
 1. Path 绑定丢失
 2. 应用可能意外重置回根视图 (popToRoot)
 3. 后续导航失效
 
-### 解决方案
-采用 **分离路由** 策略：
-1. **Push 路由**：直接返回视图内容，**不包裹** `NavigationStack`。
-2. **Sheet/Modal 路由**：使用 `NavigationStack` 包裹视图，确保模态视图有自己的导航上下文。
+#### 2. 解决方案：ScopedRouter
 
-### 代码范式
+TGModernNavigation 提供了 `ScopedRouter` 组件，用于在模态视图（Sheet/FullScreenCover）中创建独立的导航环境。
+
+**核心原则**：
+1. **Push 路由**：直接返回视图内容，**不包裹** `NavigationStack`。
+2. **Sheet/Modal 路由**：使用 `ScopedRouter` 包裹视图。
+
+#### 3. 代码范式
 
 ```swift
 enum AppRoute: Route {
@@ -201,8 +205,8 @@ enum AppRoute: Route {
             SettingsView(isModal: false)
             
         case .settingsSheet:
-            // Sheet 场景：包裹新的 NavigationStack
-            NavigationStack {
+            // Sheet 场景：使用 ScopedRouter 创建独立路由环境
+            ScopedRouter<AppRoute> {
                 SettingsView(isModal: true)
             }
         }
@@ -211,6 +215,35 @@ enum AppRoute: Route {
 ```
 
 在视图中，可以通过 `isModal` 属性来动态调整 UI（例如显示 "返回" 还是 "关闭" 按钮）。
+
+#### 4. 关于 Dismiss 的重要说明
+
+在 `ScopedRouter` 内部（即模态窗口的根视图），你拥有一个新的独立 Router 实例。
+
+- **`router.dismiss()`**: 只能关闭由**当前** Router 弹出的子模态窗口。
+- **`@Environment(\.dismiss)`**: 用于关闭**当前**模态窗口（即关闭自己）。
+
+```swift
+struct SettingsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(Router<AppRoute>.self) private var router
+    var isModal: Bool
+    
+    var body: some View {
+        List { ... }
+        .toolbar {
+            if isModal {
+                ToolbarItem(placement: .cancellationAction) {
+                    // 正确：关闭当前 Sheet
+                    Button("Close") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+```
 
 ### 2. 创建 Store
 

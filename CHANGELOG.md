@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.3] - 2026-01-17
+
+### Added
+- **Component**: Introduced `ScopedRouter` component to provide a standardized way to create isolated navigation environments for modal views. This solves the "Nested NavigationStack" issue by ensuring sheets have their own independent `Router` instance.
+- **Documentation**: Updated `README.md` and `docs/SwiftUI_Nested_NavigationStack_Issue.md` with comprehensive guidelines on "Push vs Sheet" navigation patterns and the correct usage of `ScopedRouter`.
+- **Documentation**: Clarified the usage of `dismiss` vs `router.dismiss` in modal contexts.
+
+### Changed
+- **Refactor**: Replaced ad-hoc `ScopedRouterView` implementations in the Example app with the new library-provided `ScopedRouter`.
+
 ## [0.0.2] - 2026-01-17
 
 ### Changed
