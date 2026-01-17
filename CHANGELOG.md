@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.2] - 2026-01-17
+
+### Changed
+- **Refactor**: Reorganized library source code into functional subdirectories (`Core`, `Navigation`, `Presentation`, `Router`) for better maintainability.
+- **Example**: Refactored `TGNavigationDemo` into a modular architecture using local Swift Packages (`HomeFeature`, `NavigationFeature`, `SettingsFeature`, `AppCore`, `UIComponents`).
+- **Example**: Implemented `RouteHandler` protocol for decoupled route registration across modules.
+- **Example**: Centralized reusable UI components in `UIComponents` and core logic in `AppCore`.
+
 ## [0.0.1] - 2026-01-16
 
 ### Fixed

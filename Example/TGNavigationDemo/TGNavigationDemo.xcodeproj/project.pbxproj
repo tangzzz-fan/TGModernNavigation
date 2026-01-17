@@ -7,7 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07D6EA003775A35B62F47F5B /* SettingsFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 5A7297AEBEB1C3AB32E1A61D /* SettingsFeature */; };
 		1858F96D2F1A8A3900ED0E8A /* TGModernNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 1858F96C2F1A8A3900ED0E8A /* TGModernNavigation */; };
+		7A46F071A10FCAB983DB9265 /* HomeFeature in Frameworks */ = {isa = PBXBuildFile; productRef = DD56E20155BDA561CC57B72F /* HomeFeature */; };
+		A9B682F9878498DB845F0DB3 /* UIComponents in Frameworks */ = {isa = PBXBuildFile; productRef = 824A5AE90BF5C11664CAD592 /* UIComponents */; };
+		ED06B0731DFFB5FB73DF5556 /* NavigationFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 44D0A27A066D9AEAE624D6D3 /* NavigationFeature */; };
+		F9E79D3221F582F43787754F /* AppCore in Frameworks */ = {isa = PBXBuildFile; productRef = 28EA848CF259894644C6C77E /* AppCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,16 +41,22 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1858F9202F1A89DB00ED0E8A /* TGNavigationDemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = TGNavigationDemo;
 			sourceTree = "<group>";
 		};
 		1858F92E2F1A89DD00ED0E8A /* TGNavigationDemoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = TGNavigationDemoTests;
 			sourceTree = "<group>";
 		};
 		1858F9382F1A89DD00ED0E8A /* TGNavigationDemoUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = TGNavigationDemoUITests;
 			sourceTree = "<group>";
 		};
@@ -57,6 +68,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				1858F96D2F1A8A3900ED0E8A /* TGModernNavigation in Frameworks */,
+				F9E79D3221F582F43787754F /* AppCore in Frameworks */,
+				A9B682F9878498DB845F0DB3 /* UIComponents in Frameworks */,
+				7A46F071A10FCAB983DB9265 /* HomeFeature in Frameworks */,
+				ED06B0731DFFB5FB73DF5556 /* NavigationFeature in Frameworks */,
+				07D6EA003775A35B62F47F5B /* SettingsFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +134,11 @@
 			name = TGNavigationDemo;
 			packageProductDependencies = (
 				1858F96C2F1A8A3900ED0E8A /* TGModernNavigation */,
+				28EA848CF259894644C6C77E /* AppCore */,
+				824A5AE90BF5C11664CAD592 /* UIComponents */,
+				DD56E20155BDA561CC57B72F /* HomeFeature */,
+				44D0A27A066D9AEAE624D6D3 /* NavigationFeature */,
+				5A7297AEBEB1C3AB32E1A61D /* SettingsFeature */,
 			);
 			productName = TGNavigationDemo;
 			productReference = 1858F91E2F1A89DB00ED0E8A /* TGNavigationDemo.app */;
@@ -140,8 +161,6 @@
 				1858F92E2F1A89DD00ED0E8A /* TGNavigationDemoTests */,
 			);
 			name = TGNavigationDemoTests;
-			packageProductDependencies = (
-			);
 			productName = TGNavigationDemoTests;
 			productReference = 1858F92B2F1A89DD00ED0E8A /* TGNavigationDemoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -163,8 +182,6 @@
 				1858F9382F1A89DD00ED0E8A /* TGNavigationDemoUITests */,
 			);
 			name = TGNavigationDemoUITests;
-			packageProductDependencies = (
-			);
 			productName = TGNavigationDemoUITests;
 			productReference = 1858F9352F1A89DD00ED0E8A /* TGNavigationDemoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -202,7 +219,12 @@
 			mainGroup = 1858F9152F1A89DB00ED0E8A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				1858F96B2F1A8A3900ED0E8A /* XCLocalSwiftPackageReference "../../../TGModernNavigation" */,
+				1858F96B2F1A8A3900ED0E8A /* XCLocalSwiftPackageReference "TGModernNavigation" */,
+				94B7857469B64D84574766C2 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */,
+				1931AAC96132526270D9E801 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */,
+				FB4ABB6CD8FFC7206E6FF5DF /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */,
+				24FACB498793E719CF81E139 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */,
+				693FA5DE78B63E4823F65C0A /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1858F91F2F1A89DB00ED0E8A /* Products */;
@@ -626,9 +648,29 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		1858F96B2F1A8A3900ED0E8A /* XCLocalSwiftPackageReference "../../../TGModernNavigation" */ = {
+		1858F96B2F1A8A3900ED0E8A /* XCLocalSwiftPackageReference "TGModernNavigation" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../../../TGModernNavigation;
+		};
+		1931AAC96132526270D9E801 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */ = {
+			isa = XCLocalSwiftPackageReference;
+			path = TGNavigationDemo/Packages/UIComponents;
+		};
+		24FACB498793E719CF81E139 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */ = {
+			isa = XCLocalSwiftPackageReference;
+			path = TGNavigationDemo/Packages/NavigationFeature;
+		};
+		693FA5DE78B63E4823F65C0A /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */ = {
+			isa = XCLocalSwiftPackageReference;
+			path = TGNavigationDemo/Packages/SettingsFeature;
+		};
+		94B7857469B64D84574766C2 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */ = {
+			isa = XCLocalSwiftPackageReference;
+			path = TGNavigationDemo/Packages/AppCore;
+		};
+		FB4ABB6CD8FFC7206E6FF5DF /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */ = {
+			isa = XCLocalSwiftPackageReference;
+			path = TGNavigationDemo/Packages/HomeFeature;
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -636,6 +678,31 @@
 		1858F96C2F1A8A3900ED0E8A /* TGModernNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TGModernNavigation;
+		};
+		28EA848CF259894644C6C77E /* AppCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 94B7857469B64D84574766C2 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */;
+			productName = AppCore;
+		};
+		44D0A27A066D9AEAE624D6D3 /* NavigationFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 24FACB498793E719CF81E139 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */;
+			productName = NavigationFeature;
+		};
+		5A7297AEBEB1C3AB32E1A61D /* SettingsFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 693FA5DE78B63E4823F65C0A /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */;
+			productName = SettingsFeature;
+		};
+		824A5AE90BF5C11664CAD592 /* UIComponents */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1931AAC96132526270D9E801 /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */;
+			productName = UIComponents;
+		};
+		DD56E20155BDA561CC57B72F /* HomeFeature */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FB4ABB6CD8FFC7206E6FF5DF /* XCLocalSwiftPackageReference "LocalSwiftPackageReference" */;
+			productName = HomeFeature;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

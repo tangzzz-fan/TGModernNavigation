@@ -4,18 +4,18 @@
 // Copyright (c) 2026 TG Libraries
 // Licensed under MIT License
 
-/// TGModernNavigation 是一个基于 Redux 思想的 SwiftUI 现代导航库。
+/// TGModernNavigation is a modern navigation library for SwiftUI based on Redux principles.
 ///
-/// ## 核心概念
-/// - **Route**: 定义可导航的路由类型
-/// - **NavigationState**: 不可变的导航状态
-/// - **NavigationAction**: 描述导航意图的动作
-/// - **NavigationReducer**: 纯函数，计算新状态
-/// - **NavigationStore**: 单一数据源，管理状态
+/// ## Core Concepts
+/// - **Route**: Defines navigable route types
+/// - **NavigationState**: Immutable navigation state
+/// - **NavigationAction**: Actions describing navigation intent
+/// - **NavigationReducer**: Pure function calculating new state
+/// - **NavigationStore**: Single source of truth managing state
 ///
-/// ## 快速开始
+/// ## Quick Start
 ///
-/// 1. 定义路由：
+/// 1. Define Routes:
 /// ```swift
 /// enum AppRoute: Route {
 ///     case home
@@ -38,12 +38,12 @@
 /// }
 /// ```
 ///
-/// 2. 创建导航存储：
+/// 2. Create Navigation Store:
 /// ```swift
 /// @State private var navigation = NavigationStore<AppRoute>()
 /// ```
 ///
-/// 3. 使用 ModernNavigationStack：
+/// 3. Use ModernNavigationStack:
 /// ```swift
 /// ModernNavigationStack(store: navigation) {
 ///     HomeView()
@@ -51,7 +51,7 @@
 /// .environment(navigation)
 /// ```
 ///
-/// 4. 在视图中导航：
+/// 4. Navigate in Views:
 /// ```swift
 /// @Environment(NavigationStore<AppRoute>.self) var navigation
 ///

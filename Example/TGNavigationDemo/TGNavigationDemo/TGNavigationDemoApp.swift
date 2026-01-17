@@ -7,21 +7,32 @@
 
 import SwiftUI
 import TGModernNavigation
+import AppCore
+import HomeFeature
+import NavigationFeature
+import SettingsFeature
+import UIComponents
 
 // MARK: - Example App
 
 @main
 struct TGModernNavigationExampleApp: App {
     
-    /// 使用组合路由器管理导航和展示
-    @State private var router = Router<AppRoute>()
+    init() {
+        // 注册路由模块
+        // 在实际项目中，这里可以通过依赖注入容器自动完成
+        let registry = RouteRegistry<AppRoute>.shared
+        registry.register(HomeRouteModule())
+        registry.register(NavigationRouteModule())
+        registry.register(PresentationRouteModule())
+        registry.register(DetailRouteModule())
+        registry.register(UserRouteModule())
+        registry.register(SettingsRouteModule())
+    }
     
     var body: some Scene {
         WindowGroup {
-            RouterNavigationStack(router: router) {
-                HomeView()
-            }
-            .tint(.indigo)
+            MainTabView()
         }
     }
 }

@@ -266,7 +266,24 @@ struct HomeView: View {
 }
 ```
 
-### 5. Deep Linking
+### 5. 简易用法分析：@Environment 注入
+
+在视图中通过 `@Environment` 获取 Store 是最常用的模式。
+
+```swift
+@Environment(NavigationStore<AppRoute>.self) private var store
+```
+
+**✅ 优势 (Pros):**
+- **解耦视图层级**: 无需从父视图通过构造函数层层传递 `store` 或 `binding`。
+- **声明式**: 任意深度的子视图都可以直接获取导航能力。
+- **响应式**: 当 Store 状态变化时，依赖它的视图会自动更新（得益于 `@Observable`）。
+
+**⚠️ 注意 (Cons):**
+- **隐式依赖**: 这是一个隐式依赖。如果忘记在根视图调用 `.environment(store)`，应用会在运行时 Crash。
+- **泛型耦合**: 视图与具体的 `AppRoute` 类型绑定。如果需要编写通用的 UI 组件，建议传入闭包 `() -> Void` 而不是直接依赖 Store。
+
+### 6. Deep Linking
 
 ```swift
 // 设置完整的导航路径
