@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.4] - 2026-01-17
+## [0.0.4] - 2026-01-18
 
 ### Changed
 - **BREAKING**: Changed default value of `embedInNavigationStack` to `false` in `router.sheet()`, `router.fullScreenCover()`, and `presentation.present()`. You must now explicitly set `embedInNavigationStack: true` if you need a NavigationStack inside a modal.
@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 - **Refactor**: Removed unused `DeepLink` module and `NavigationPath` extensions to simplify the library core.
 
 ### Documentation
+- Added `docs/Architecture_And_Best_Practices.md`: A comprehensive guide on library architecture and patterns.
+- Added `docs/Redux_Integration_Guide.md`: Best practices for integrating with Redux/TCA.
 - Updated `README.md` and `SwiftUI_Nested_NavigationStack_Issue.md` to reflect the new default behavior and API changes.
 
 ## [0.0.3] - 2026-01-17

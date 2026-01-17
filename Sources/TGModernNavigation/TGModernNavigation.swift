@@ -66,6 +66,6 @@
 public enum TGModernNavigationVersion {
     public static let major = 0
     public static let minor = 0
-    public static let patch = 1
+    public static let patch = 4
     public static let string = "\(major).\(minor).\(patch)"
 }
