@@ -6,6 +6,8 @@ import AppCore
 
 public struct LoginView: View {
     @Environment(Router<AppRoute>.self) private var router
+    @Environment(\.dismiss) private var dismiss
+    
     let isModal: Bool
     
     public init(isModal: Bool = false) {
@@ -15,10 +17,24 @@ public struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var isLoading = false
+    @State private var errorMessage: String?
+    
+    private let authService = AuthService.shared
     
     public var body: some View {
         VStack(spacing: 32) {
-            Spacer()
+            if isModal {
+                HStack {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                    Spacer()
+                }
+                .padding()
+            } else {
+                Spacer()
+                    .frame(height: 16)
+            }
             
             // Logo
             VStack(spacing: 16) {
@@ -42,6 +58,12 @@ public struct LoginView: View {
             
             // Form
             VStack(spacing: 16) {
+                if let error = errorMessage {
+                    Text(error)
+                        .foregroundStyle(.red)
+                        .font(.caption)
+                }
+                
                 TextField("Email", text: $email)
                     .textFieldStyle(.roundedBorder)
                     .textContentType(.emailAddress)
@@ -68,68 +90,38 @@ public struct LoginView: View {
             }
             .padding(.horizontal, 32)
             
-            // Links
-            VStack(spacing: 12) {
-                Button("Forgot Password?") {
-                    // Handle forgot password
-                }
-                .font(.subheadline)
-                
-                HStack {
-                    Text("Don't have an account?")
-                        .foregroundStyle(.secondary)
-                    Button("Sign Up") {
-                        // Handle sign up
-                    }
-                }
-                .font(.subheadline)
-            }
-            
             Spacer()
             
             // Demo Note
             GroupBox {
                 HStack {
                     Image(systemName: "info.circle.fill")
-                        .foregroundStyle(.blue)
-                    Text("This is a demo login screen. Tap Sign In to dismiss.")
+                    .foregroundStyle(.blue)
+                    Text("This is a demo login screen. Any password works.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
             .padding(.horizontal)
         }
-        .padding()
-        .navigationBarTitleDisplayModeCompat(.inline)
-        .toolbar {
-            if isModal {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        router.dismiss()
-                    }
-                }
-            }
-        }
     }
     
     private func login() {
         isLoading = true
+        errorMessage = nil
         
-        // Simulate login delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            isLoading = false
-            if isModal {
-                router.dismiss()
-            } else {
-                router.pop()
+        Task {
+            do {
+                try await authService.login(email: email, password: password)
+                if isModal {
+                    dismiss()
+                } else {
+                    router.pop()
+                }
+            } catch {
+                errorMessage = "Login failed. Please try again."
             }
+            isLoading = false
         }
     }
-}
-
-#Preview {
-    NavigationStack {
-        LoginView()
-    }
-    .environment(Router<AppRoute>())
 }
